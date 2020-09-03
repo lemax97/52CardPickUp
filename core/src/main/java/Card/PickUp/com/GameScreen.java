@@ -47,13 +47,13 @@ public class GameScreen extends BaseScreen{
             pile.setRectangleBoundary();
             pileList.add(pile);
             mainStage.addActor(pile);
+        }
 
-            String[] rankNames = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-            String[] suitNames = {"Clubs", "Hearts", "Spades", "Diamonds"};
+        String[] rankNames = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        String[] suitNames = {"Clubs", "Hearts", "Spades", "Diamonds"};
 
-            cardList = new ArrayList<Card>();
-
-            for (int r = 0; r < rankNames.length; r++) {
+        cardList = new ArrayList<Card>();
+        for (int r = 0; r < rankNames.length; r++) {
                 for (int s = 0; s < suitNames.length; s++) {
                     Card card = new Card(rankNames[r], suitNames[s]);
                     String fileName = "card" + suitNames[s] + rankNames[r] + ".png";
@@ -62,6 +62,8 @@ public class GameScreen extends BaseScreen{
                     card.setHeight(100);
                     card.setOriginCenter();
                     card.setRectangleBoundary();
+
+                    cardList.add(card);
 
                     card.addListener(
                             new InputListener(){
@@ -118,12 +120,10 @@ public class GameScreen extends BaseScreen{
                                 }
                             });
 
-                    cardList.add(card);
+
                     mainStage.addActor(card);
                     card.setZIndex(5); //cards created later should render earlier (on bottom)
                 }
-            }
-
         }
 
         // Add hints and effects
