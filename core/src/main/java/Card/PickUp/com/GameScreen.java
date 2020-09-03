@@ -1,6 +1,7 @@
 package Card.PickUp.com;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -121,8 +122,24 @@ public class GameScreen extends BaseScreen{
                 }
             }
 
+        }
 
-
+        // move Aces to piles; randomize positions of all other cards
+        for (Card card: cardList){
+            if (card.getRank().equals("A")){
+                for (Pile pile : pileList){
+                    if (pile.isEmpty()){
+                        card.moveToOrigin(pile);
+                        pile.addCard(card);
+                        card.dragable = false;
+                        break;
+                    }
+                }
+            }
+            else {
+                card.addAction(Actions.moveTo(MathUtils.random(720), MathUtils.random(200), 1f));
+//                card.setPosition(MathUtils.random(720), MathUtils.random(200));
+            }
         }
     }
 
