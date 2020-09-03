@@ -1,5 +1,6 @@
 package Card.PickUp.com;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -51,6 +52,7 @@ public class GameScreen extends BaseScreen{
             String[] suitNames = {"Clubs", "Hearts", "Spades", "Diamonds"};
 
             cardList = new ArrayList<Card>();
+
             for (int r = 0; r < rankNames.length; r++) {
                 for (int s = 0; s < suitNames.length; s++) {
                     Card card = new Card(rankNames[r], suitNames[s]);
@@ -124,12 +126,29 @@ public class GameScreen extends BaseScreen{
 
         }
 
+        // Add hints and effects
+        glowEffect = new BaseActor();
+        Texture glowTexture = new Texture("glowBlue.png");
+        glowEffect.setTexture(glowTexture);
+        glowEffect.setWidth(cardList.get(0).getWidth() * 1.5f);
+        glowEffect.setHeight(cardList.get(0).getHeight() * 1.5f);
+        glowEffect.setOriginCenter();
+        glowEffect.addAction(
+                Actions.forever(Actions.sequence(Actions.fadeOut(0.5f),
+                        Actions.fadeIn(0.5f))));
+        glowEffect.setVisible(false);
+        mainStage.addActor(glowEffect);
+
+        hintTimer = 0;
+
+
         // move Aces to piles; randomize positions of all other cards
         for (Card card: cardList){
             if (card.getRank().equals("A")){
                 for (Pile pile : pileList){
                     if (pile.isEmpty()){
                         card.moveToOrigin(pile);
+ //                       card.addAction(Actions.moveTo(pile.getOriginX(), pile.getOriginY()));
                         pile.addCard(card);
                         card.dragable = false;
                         break;
@@ -141,10 +160,29 @@ public class GameScreen extends BaseScreen{
 //                card.setPosition(MathUtils.random(720), MathUtils.random(200));
             }
         }
+
     }
 
     @Override
     public void update(float dt) {
+
+        hintTimer += dt;
+        if (Gdx.input.isTouched()){
+            hintTimer = 0;
+            glowEffect.setVisible(false);
+        }
+
+        //activate hint mechanic
+        if (hintTimer > 3 && !glowEffect.isVisible()){
+            for (Card hintCard: cardList){
+                if (hintCard.dragable){
+                    glowEffect.setVisible(true);
+                    glowEffect.moveToOrigin(hintCard);
+                    glowEffect.toFront();
+                    break; // exits loop at first chance
+                }
+            }
+        }
 
     }
 }
