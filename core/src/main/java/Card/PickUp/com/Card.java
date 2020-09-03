@@ -27,7 +27,11 @@ public class Card extends BaseActor {
     }
 
     public int getRankIndex(){
-
+        String[] rankNames = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        for (int i = 0; i < rankNames.length; i++) {
+            if (rank.equals(rankNames[i]))
+                return i;
+        }
         return -1;
     }
 }
